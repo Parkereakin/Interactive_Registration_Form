@@ -38,7 +38,45 @@
 			$('#colors-js-puns').hide();
 		}
 
+		let colorOptions = $('#color option').length;
+
+		function hideColors(color) {
+			$('#color option').each(function(i) {
+				let colorText = $(this).text();
+				let colorStart = colorText.toLowerCase().indexOf('(');
+				colorStart += 1;
+				let colorEnd = colorText.toLowerCase().indexOf(')');
+				let colorLength = colorEnd - colorStart;
+				let colorTheme = colorText.substr(colorStart, colorLength).replace(" shirt only", "");
+
+				if (colorTheme !== color) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			});
+		}
+
+
+
+
+
+		var shirtDesign = $('#design').val();
+		if ( shirtDesign === 'js puns') {
+			hideColors('JS Puns');
+			$('#color').val('cornflowerblue');
+		} else if (shirtDesign === 'heart js') {
+			hideColors('I ♥ JS');
+			$('#color').val('tomato');
+		} else {
+
+		}
+
 	});
+
+
+
+		
 
 // Make sure User can't select two activites occuring at the same time.
 	// Splits the strings to get time. Creates an array, then adds and removes times of clicked or uncliked inputs. If input is clicked, and the time already exists in the array, an alert pops up and the input is unchecked.
@@ -105,14 +143,38 @@
 
 
 // Select credit Card as the payment option by default
-	var paymentMethod = document.querySelector('#payment');
-	paymentMethod.value = "credit card";
-
-// Payment option in the select menu matches the payment option displayed on the page
-
+	const paymentMethod = $('#payment');
+	paymentMethod.val("credit card");
 
 // When a user chooses a payment option, the chosen payment section is revealed and the other payment sections are hidden
+	
+	const creditCard = $('#credit-card');
+	const payPal = $('#credit-card').next("div");
+	const bitcoin = $('#credit-card').next("div").next("div");
 
+	creditCard.show();
+	payPal.hide();
+	bitcoin.hide();
+
+	$(paymentMethod).on('change', function() {
+		let paymentOption = $(this).val();
+
+		if (paymentOption === "credit card") {
+			creditCard.show();
+			payPal.hide();
+			bitcoin.hide();
+
+		} else if (paymentOption === "paypal") {
+			creditCard.hide();
+			payPal.show();
+			bitcoin.hide();
+
+		} else if (paymentOption === "bitcoin") {
+			creditCard.hide();
+			payPal.hide();
+			bitcoin.show();
+		}
+	});
 
 
 //Form cannot be submitted (the page does not refresh when the submit button is clicked) until the following requirements have been met:
@@ -142,8 +204,6 @@
 	// Form provides at least one error message that changes depending on the error. For example, the email field displays a different error message when the email field is empty than it does when the email address is formatted incorrectly. *This is accomplished without the use of HTML5's built-in field validation.
 
 
-
-// DONE - When JavaScript is disabled, all form fields and payment information is displayed, including the "Other" field under the "Job Role" section.
 
 
 
