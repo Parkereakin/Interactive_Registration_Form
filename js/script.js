@@ -44,6 +44,12 @@
 	// Splits the strings to get time. Creates an array, then adds and removes times of clicked or uncliked inputs. If input is clicked, and the time already exists in the array, an alert pops up and the input is unchecked.
 	var activities = $('.activities input');
 	var timeArray = [];
+	var priceArray = [0];
+
+	var displayPrice = document.createElement('p');
+	displayPrice.className = "priceTotal";
+	document.querySelector('.activities').append(displayPrice);
+
 
 	$(activities).on('change', function() {
 		var text = $(this).parent().text();
@@ -53,6 +59,7 @@
 		var timeLength = timeEnd - timeStart;
 		var time = text.substr(timeStart, timeLength);
 		var arrayIndex = jQuery.inArray(time, timeArray);
+
 		if ($(this).is(':checked')) {
 			if (arrayIndex !== -1) {
 				alert("uh oh! You can't be in 2 places at once.");
@@ -60,20 +67,46 @@
 			} else {
 			 timeArray.push(time);
 			}
-			console.log(timeArray);
 		}
 		else {
 			timeArray.splice(arrayIndex, 1);
-			console.log(timeArray);
 		}
+
+
+		// Calculate and display total cost of the selected activities, below the list of activities
+		var priceStart = text.toLowerCase().indexOf('$');
+		priceStart += 1;
+		var priceEnd = text.length;
+		var price = text.substr(priceStart, priceEnd);
+		var priceArrayIndex = jQuery.inArray(price, priceArray);
+
+		if ($(this).is(':checked')) {
+			if (arrayIndex !== -1) {
+
+			} else {
+				priceArray.push(parseInt(price));
+			}
+		}
+		else {
+			priceArray.push(parseInt(price * -1));
+		}
+
+		function getSum(total, num) {
+		    return total + num;
+		}
+
+		var totalPrice = priceArray.reduce(getSum);
+		console.log(totalPrice);
+
+		displayPrice.textContent = "Your Total: $" + totalPrice;
+
+
 	});
 
 
-// Calculate and display total cost of the selected activities, below the list of activities.
-
-
-// Credit Card payment option is selected by default
-
+// Select credit Card as the payment option by default
+	var paymentMethod = document.querySelector('#payment');
+	paymentMethod.value = "credit card";
 
 // Payment option in the select menu matches the payment option displayed on the page
 
