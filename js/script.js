@@ -3,19 +3,70 @@
 */
 
 
-// Use Jquery
-
-
 // Automatically focus on first field after page load
+	$('#name').focus();
 
+// Changes "Other" Label text, and hides the label and input until the "other" option under Job Role is selected.
+	$('#other').hide();
+	$('#other').prev().text('Other - Job Role:');
+	$('#other').prev().hide();
 
-// Job Role - If user selects "other" under Job Role, a new text field appears
+	$('#title').on('change', function() {
 
+		var jobRole = $('#title').val();
+
+		if (jobRole === 'other') {
+			$('#other').show();
+			$('#other').prev().show();
+		} else {
+			$('#other').hide();
+			$('#other').prev().hide();
+		}
+
+	});
 
 // Color drop down menu is hidden until a T-shirt design is selected.
+	$('#colors-js-puns').hide();
 
+	$('#design').on('change', function() {
+
+		var designChosen = $('#design').val().toLowerCase();
+
+		if (designChosen !== 'select theme') {
+			$('#colors-js-puns').show();
+		} else {
+			$('#colors-js-puns').hide();
+		}
+
+	});
 
 // Make sure User can't select two activites occuring at the same time.
+	// Splits the strings to get time. Creates an array, then adds and removes times of clicked or uncliked inputs. If input is clicked, and the time already exists in the array, an alert pops up and the input is unchecked.
+	var activities = $('.activities input');
+	var timeArray = [];
+
+	$(activities).on('change', function() {
+		var text = $(this).parent().text();
+		var timeStart = text.toLowerCase().indexOf('m-');
+		timeStart += -2;
+		var timeEnd = text.toLowerCase().indexOf(', $');
+		var timeLength = timeEnd - timeStart;
+		var time = text.substr(timeStart, timeLength);
+		var arrayIndex = jQuery.inArray(time, timeArray);
+		if ($(this).is(':checked')) {
+			if (arrayIndex !== -1) {
+				alert("uh oh! You can't be in 2 places at once.");
+				$(this).prop('checked', false);
+			} else {
+			 timeArray.push(time);
+			}
+			console.log(timeArray);
+		}
+		else {
+			timeArray.splice(arrayIndex, 1);
+			console.log(timeArray);
+		}
+	});
 
 
 // Calculate and display total cost of the selected activities, below the list of activities.
@@ -59,9 +110,7 @@
 
 
 
-// When JavaScript is disabled, all form fields and payment information is displayed, including the "Other" field under the "Job Role" section.
-
-
+// DONE - When JavaScript is disabled, all form fields and payment information is displayed, including the "Other" field under the "Job Role" section.
 
 
 
