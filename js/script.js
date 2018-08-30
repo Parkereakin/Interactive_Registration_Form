@@ -3,6 +3,7 @@
 */
 
 // Global Variables
+	let jobRole = $('#title').val();
 	let activities = $('.activities input');
 	let numChecked = $('.activities :checked').length;
 	let ccNum = $('#cc-num').val();
@@ -22,8 +23,7 @@
 	$('#other').prev().hide();
 
 	$('#title').on('change', function() {
-
-		var jobRole = $('#title').val();
+		jobRole = $('#title').val();
 
 		if (jobRole === 'other') {
 			$('#other').show();
@@ -189,13 +189,14 @@
 //Form cannot be submitted (the page does not refresh when the submit button is clicked) until the following requirements have been met:
 
 	function checkIntegers(num) {
-		let isInteger = Number.isInteger(parseInt(num));
-		return isInteger;
+		let isNan = Number.isNaN(num);
+		return isNan;
 	}
 
 	$('button').on('click', function(e) {
 		let name = $('#name').val();
 		let email = $('#mail').val();
+		let other = $('#other').val();
 		let dotCom = email.indexOf('.');
 		numChecked = $('.activities :checked').length;
 		let paymentOption = paymentMethod.val();
@@ -214,6 +215,13 @@
 			$('input#mail:focus').css('border-color', 'red');
 			$('#mail').prev().css('color', 'red');
 
+		} else if (jobRole === 'other' && other === "") {
+			e.preventDefault();
+			alert('You forgot to enter your Job Role!');
+			$('#other').focus();
+			$('input#other:focus').css('border-color', 'red');
+			$('#other').prev().css('color', 'red');
+
 		} else if (numChecked === 0 ) {
 			e.preventDefault();
 			alert('You must select an activity');
@@ -224,27 +232,27 @@
 
 		} else if (paymentOption === "credit card") {
 			ccNum = $('#cc-num').val();
-			checkCCNum = checkIntegers(ccNum);
+			checkCCNum = isNaN(ccNum);
 			zipNum = $('#zip').val();
-			checkZipNum = checkIntegers(zipNum);
+			checkZipNum = isNaN(zipNum);
 			cvvNum = $('#cvv').val();
-			checkCvvNum = checkIntegers(cvvNum);
+			checkCvvNum = isNaN(cvvNum);
 
-			if (checkCCNum === false || ccNum.length < 13 || ccNum.length > 16) {
+			if (checkCCNum === true || ccNum.length < 13 || ccNum.length > 16) {
 				e.preventDefault();
 				alert('The Credit Card number is invalid.');
 				$('#cc-num').focus();
 				$('input#cc-num:focus').css('border-color', 'red');
 				$('#cc-num').prev().css('color', 'red');
 
-			} else if (checkZipNum === false || zipNum.length !== 5) {
+			} else if (checkZipNum === true || zipNum.length !== 5) {
 				e.preventDefault();
 				alert('The Zip Code must be 5 digits.');
 				$('#zip').focus();
 				$('input#zip:focus').css('border-color', 'red');
 				$('#zip').prev().css('color', 'red');
 
-			} else if (checkCvvNum === false || cvvNum.length !== 3) {
+			} else if (checkCvvNum === true || cvvNum.length !== 3) {
 				e.preventDefault();
 				alert('The CVV value must be 3 numbers.');
 				$('#cvv').focus();
@@ -278,6 +286,17 @@
 	});
 
 
+	// Name field isn’t blank.
+	$('#other').on('change', function(e) {
+		let other = $('#other').val();
+		if (other !== "") {
+			$('input#other').css('border-color', 'transparent');
+			$('input#other:focus').css('border-color', '#5e97b0');
+			$('#other').prev().css('color', '#000');
+		}
+	});
+
+	
 	// At least one checkbox under "Register for Activities" section must be selected.
 	$(activities).on('change', function(e) {
 		numChecked = $('.activities :checked').length;
@@ -289,8 +308,8 @@
 	// If "Credit Card" is the selected payment option, the three fields accept only numbers: a 13 to 16-digit credit card number, a 5-digit zip code, and 3-number CVV value.
 	$('#cc-num').on('change', function(e) {
 		ccNum = $('#cc-num').val();
-		checkCCNum = checkIntegers(ccNum);
-		if (checkCCNum === true  && ccNum.length >= 13 && ccNum.length <= 16) {
+		checkCCNum = isNaN(ccNum);
+		if (checkCCNum === false  && ccNum.length >= 13 && ccNum.length <= 16) {
 			$('input#cc-num').css('border-color', 'transparent');
 			$('input#cc-num:focus').css('border-color', '#5e97b0');
 			$('#cc-num').prev().css('color', '#000');
@@ -298,8 +317,8 @@
 	});
 	$('#zip').on('change', function(e) {
 		zipNum = $('#zip').val();
-		checkZipNum = checkIntegers(zipNum);
-		if (checkZipNum === true && zipNum.length === 5) {
+		checkZipNum = isNaN(zipNum);
+		if (checkZipNum === false && zipNum.length === 5) {
 			$('input#zip').css('border-color', 'transparent');
 			$('input#zip:focus').css('border-color', '#5e97b0');
 			$('#zip').prev().css('color', '#000');
@@ -307,29 +326,13 @@
 	});
 	$('#cvv').on('change', function(e) {
 		cvvNum = $('#cvv').val();
-		checkCvvNum = checkIntegers(cvvNum);
-		if (checkCvvNum === true && cvvNum.length === 3) {
+		checkCvvNum = isNaN(cvvNum);
+		if (checkCvvNum === false && cvvNum.length === 3) {
 			$('input#cvv').css('border-color', 'transparent');
 			$('input#cvv:focus').css('border-color', '#5e97b0');
 			$('#cvv').prev().css('color', '#000');
 		}
 	});
-
-
-
-
-// On submission, the form provides an error indication or message for each field that requires validation:
-
-	// Name field
-
-	// Email field
-
-	// “Register for Activities” checkboxes
-
-	// Credit Card number, Zip code, and CVV, only if the credit card payment method is selected.
-
-
-
 
 
 
