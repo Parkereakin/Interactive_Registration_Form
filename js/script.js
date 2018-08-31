@@ -13,7 +13,6 @@
 	let cvvNum = $('#cvv').val();
 	let checkCvvNum = checkIntegers(cvvNum);
 
-
 // Automatically focus on first field after page load
 	$('#name').focus();
 
@@ -21,10 +20,8 @@
 	$('#other').hide();
 	$('#other').prev().text('Other - Job Role:');
 	$('#other').prev().hide();
-
 	$('#title').on('change', function() {
 		jobRole = $('#title').val();
-
 		if (jobRole === 'other') {
 			$('#other').show();
 			$('#other').prev().show();
@@ -32,23 +29,18 @@
 			$('#other').hide();
 			$('#other').prev().hide();
 		}
-
 	});
 
 // Color drop down menu is hidden until a T-shirt design is selected.
 	$('#colors-js-puns').hide();
-
 	$('#design').on('change', function() {
-
-		var designChosen = $('#design').val().toLowerCase();
-
+		let designChosen = $('#design').val().toLowerCase();
+		let colorOptions = $('#color option').length;
 		if (designChosen !== 'select theme') {
 			$('#colors-js-puns').show();
 		} else {
 			$('#colors-js-puns').hide();
 		}
-
-		let colorOptions = $('#color option').length;
 
 		function hideColors(color) {
 			$('#color option').each(function(i) {
@@ -66,38 +58,22 @@
 				}
 			});
 		}
-
-
-
-
-
-		var shirtDesign = $('#design').val();
-		if ( shirtDesign === 'js puns') {
+		if ( designChosen === 'js puns') {
 			hideColors('JS Puns');
 			$('#color').val('cornflowerblue');
-		} else if (shirtDesign === 'heart js') {
+		} else if (designChosen === 'heart js') {
 			hideColors('I ♥ JS');
 			$('#color').val('tomato');
-		} else {
-
 		}
-
 	});
-
-
-
-		
 
 // Make sure User can't select two activites occuring at the same time.
 	// Splits the strings to get time. Creates an array, then adds and removes times of clicked or uncliked inputs. If input is clicked, and the time already exists in the array, an alert pops up and the input is unchecked.
-
 	var timeArray = [];
 	var priceArray = [0];
-
 	var displayPrice = document.createElement('p');
 	displayPrice.className = "priceTotal";
 	document.querySelector('.activities').append(displayPrice);
-
 
 	$(activities).on('change', function() {
 		var text = $(this).parent().text();
@@ -107,19 +83,17 @@
 		var timeLength = timeEnd - timeStart;
 		var time = text.substr(timeStart, timeLength);
 		var arrayIndex = jQuery.inArray(time, timeArray);
-
 		if ($(this).is(':checked')) {
 			if (arrayIndex !== -1) {
 				alert("uh oh! You can't be in 2 places at once.");
 				$(this).prop('checked', false);
 			} else {
-			 timeArray.push(time);
+			 	timeArray.push(time);
 			}
 		}
 		else {
 			timeArray.splice(arrayIndex, 1);
 		}
-
 
 		// Calculate and display total cost of the selected activities, below the list of activities
 		var priceStart = text.toLowerCase().indexOf('$');
@@ -127,10 +101,8 @@
 		var priceEnd = text.length;
 		var price = text.substr(priceStart, priceEnd);
 		var priceArrayIndex = jQuery.inArray(price, priceArray);
-
 		if ($(this).is(':checked')) {
 			if (arrayIndex !== -1) {
-
 			} else {
 				priceArray.push(parseInt(price));
 			}
@@ -144,40 +116,31 @@
 		}
 
 		var totalPrice = priceArray.reduce(getSum);
-
 		displayPrice.textContent = "Your Total: $" + totalPrice;
-
-
 	});
-
 
 // Select credit Card as the payment option by default
 	const paymentMethod = $('#payment');
 	paymentMethod.val("credit card");
 
-// When a user chooses a payment option, the chosen payment section is revealed and the other payment sections are hidden
-	
+// When a user chooses a payment option, the chosen payment section is revealed and the other payment sections are hidden	
 	const creditCard = $('#credit-card');
 	const payPal = $('#credit-card').next("div");
 	const bitcoin = $('#credit-card').next("div").next("div");
-
 	creditCard.show();
 	payPal.hide();
 	bitcoin.hide();
 
 	$(paymentMethod).on('change', function() {
 		let paymentOption = $(this).val();
-
 		if (paymentOption === "credit card") {
 			creditCard.show();
 			payPal.hide();
 			bitcoin.hide();
-
 		} else if (paymentOption === "paypal") {
 			creditCard.hide();
 			payPal.show();
 			bitcoin.hide();
-
 		} else if (paymentOption === "bitcoin") {
 			creditCard.hide();
 			payPal.hide();
@@ -185,9 +148,7 @@
 		}
 	});
 
-
 //Form cannot be submitted (the page does not refresh when the submit button is clicked) until the following requirements have been met:
-
 	function checkIntegers(num) {
 		let isNan = Number.isNaN(num);
 		return isNan;
@@ -200,28 +161,24 @@
 		let dotCom = email.indexOf('.');
 		numChecked = $('.activities :checked').length;
 		let paymentOption = paymentMethod.val();
-
 		if (name === "") {
 			e.preventDefault();
 			alert('You forgot to enter your name!');
 			$('#name').focus();
 			$('input#name:focus').css('border-color', 'red');
 			$('#name').prev().css('color', 'red');
-
 		} else if (dotCom === -1 ) {
 			e.preventDefault();
 			alert('Your email address in incomplete.');
 			$('#mail').focus();
 			$('input#mail:focus').css('border-color', 'red');
 			$('#mail').prev().css('color', 'red');
-
 		} else if (jobRole === 'other' && other === "") {
 			e.preventDefault();
 			alert('You forgot to enter your Job Role!');
 			$('#other').focus();
 			$('input#other:focus').css('border-color', 'red');
 			$('#other').prev().css('color', 'red');
-
 		} else if (numChecked === 0 ) {
 			e.preventDefault();
 			alert('You must select an activity');
@@ -229,7 +186,6 @@
 			$([document.documentElement, document.body]).animate({
 		        scrollTop: $(".activities").offset().top
 		    }, 600);
-
 		} else if (paymentOption === "credit card") {
 			ccNum = $('#cc-num').val();
 			checkCCNum = isNaN(ccNum);
@@ -237,21 +193,18 @@
 			checkZipNum = isNaN(zipNum);
 			cvvNum = $('#cvv').val();
 			checkCvvNum = isNaN(cvvNum);
-
 			if (checkCCNum === true || ccNum.length < 13 || ccNum.length > 16) {
 				e.preventDefault();
 				alert('The Credit Card number is invalid.');
 				$('#cc-num').focus();
 				$('input#cc-num:focus').css('border-color', 'red');
 				$('#cc-num').prev().css('color', 'red');
-
 			} else if (checkZipNum === true || zipNum.length !== 5) {
 				e.preventDefault();
 				alert('The Zip Code must be 5 digits.');
 				$('#zip').focus();
 				$('input#zip:focus').css('border-color', 'red');
 				$('#zip').prev().css('color', 'red');
-
 			} else if (checkCvvNum === true || cvvNum.length !== 3) {
 				e.preventDefault();
 				alert('The CVV value must be 3 numbers.');
@@ -259,10 +212,8 @@
 				$('input#cvv:focus').css('border-color', 'red');
 				$('#cvv').prev().css('color', 'red');
 			}
-
 		}
 	});
-
 
 	// Name field isn’t blank.
 	$('#name').on('change', function(e) {
@@ -274,7 +225,6 @@
 		}
 	});
 
-	
 	// Email field contains validly formatted e-mail address: (doesn’t have to check that it's a real e-mail address, just that it's formatted like one: dave@teamtreehouse.com, for example).
 	$('#mail').on('change', function(e) {
 		let email = $('#mail').val();
@@ -284,7 +234,6 @@
 			$('#mail').prev().css('color', '#000');
 		}
 	});
-
 
 	// Name field isn’t blank.
 	$('#other').on('change', function(e) {
@@ -296,7 +245,6 @@
 		}
 	});
 
-	
 	// At least one checkbox under "Register for Activities" section must be selected.
 	$(activities).on('change', function(e) {
 		numChecked = $('.activities :checked').length;
@@ -315,6 +263,7 @@
 			$('#cc-num').prev().css('color', '#000');
 		}
 	});
+
 	$('#zip').on('change', function(e) {
 		zipNum = $('#zip').val();
 		checkZipNum = isNaN(zipNum);
@@ -324,6 +273,7 @@
 			$('#zip').prev().css('color', '#000');
 		}
 	});
+
 	$('#cvv').on('change', function(e) {
 		cvvNum = $('#cvv').val();
 		checkCvvNum = isNaN(cvvNum);
@@ -334,6 +284,27 @@
 		}
 	});
 
+
+
+
+// On submission, the form provides an error indication or message for each field that requires validation:
+
+	// Name field
+
+	// Email field
+
+	// “Register for Activities” checkboxes
+
+	// Credit Card number, Zip code, and CVV, only if the credit card payment method is selected.
+
+
+
+
+
+//////////   tips:
+
+//    Could make it a little more obvious what activities are conflicting with the one you 
+//    have picked (if any), disabling the checkbox of the conflicting activity would be a good start.
 
 
 
