@@ -70,52 +70,87 @@
 // Make sure User can't select two activites occuring at the same time.
 	// Splits the strings to get time. Creates an array, then adds and removes times of clicked or uncliked inputs. If input is clicked, and the time already exists in the array, an alert pops up and the input is unchecked.
 	var timeArray = [];
+	var dayArray = [];
 	var priceArray = [0];
 	var displayPrice = document.createElement('p');
 	displayPrice.className = "priceTotal";
 	document.querySelector('.activities').append(displayPrice);
+	const allActivities = document.querySelectorAll('.activities input');
+	var activitiesArray = [];
+
+	for (let i = 0; i < allActivities.length; i++) {
+		let text = $(allActivities[i]).parent().text();
+		allActivities[i].className = `${i}`
+		let title = text.substr(0, text.indexOf(' —'));
+		let timeStart = text.toLowerCase().indexOf('m-') - 2;
+		let timeEnd = text.toLowerCase().indexOf(', $');
+		let timeLength = timeEnd - timeStart;
+		let time = text.substr(timeStart, timeLength);
+		if (time.indexOf('m') !== -1) {
+			time = time
+		} else {
+			time = ""
+		};
+		let textLessTitle = text.replace(`${title} — `, "");
+		let day = textLessTitle.substr(0, textLessTitle.indexOf(' '));
+		let arrayIndex = jQuery.inArray(time, timeArray);
+		let priceStart = text.toLowerCase().indexOf('$') + 1;
+		let priceEnd = text.length;
+		let price = parseInt(text.substr(priceStart, priceEnd));
+
+		activitiesArray.push({
+			'fullText': text,
+			'index': i,
+			'checked': false,
+			'title': title,
+			'day': day,
+			'time': time,
+			'price': price
+		});
+	}
 
 	$(activities).on('change', function() {
-		var text = $(this).parent().text();
-		var timeStart = text.toLowerCase().indexOf('m-');
-		timeStart += -2;
-		var timeEnd = text.toLowerCase().indexOf(', $');
-		var timeLength = timeEnd - timeStart;
-		var time = text.substr(timeStart, timeLength);
-		var arrayIndex = jQuery.inArray(time, timeArray);
+		let thisText = $(this).parent().text();
+		let number = activitiesArray
+						.filter((activity) => activity.fullText === thisText)
+						.map((num) => parseInt(num.index));
+		let num = number[0];
+		let thisDay = activitiesArray[num].day;
+		let thisTime = activitiesArray[num].time;
+
+		let dayArrayIndex = jQuery.inArray(thisDay, dayArray);
+		let timeArrayIndex = jQuery.inArray(thisTime, timeArray);
 		if ($(this).is(':checked')) {
-			if (arrayIndex !== -1) {
-				alert("uh oh! You can't be in 2 places at once.");
-				$(this).prop('checked', false);
-			} else {
-			 	timeArray.push(time);
+			for (let i = 0; i < activitiesArray.length; i++) {
+				if (activitiesArray[i].day === thisDay && activitiesArray[i].time === thisTime && activitiesArray[i].index !== num) {
+					allActivities[i].parentNode.style.opacity = "0.2";					
+					allActivities[i].parentNode.style.display = "none";					
+					allActivities[i].parentNode.style.textDecoration = "line-through";					
+				}
 			}
 		}
 		else {
-			timeArray.splice(arrayIndex, 1);
+			for (let i = 0; i < activitiesArray.length; i++) {
+				if (activitiesArray[i].day === thisDay && activitiesArray[i].time === thisTime && activitiesArray[i].index !== num) {
+					allActivities[i].parentNode.style.opacity = "1";					
+					allActivities[i].parentNode.style.display = "block";					
+					allActivities[i].parentNode.style.textDecoration = "none";					
+				}
+			}
 		}
 
 		// Calculate and display total cost of the selected activities, below the list of activities
-		var priceStart = text.toLowerCase().indexOf('$');
-		priceStart += 1;
-		var priceEnd = text.length;
-		var price = text.substr(priceStart, priceEnd);
-		var priceArrayIndex = jQuery.inArray(price, priceArray);
+		let price = activitiesArray[num].price;
 		if ($(this).is(':checked')) {
-			if (arrayIndex !== -1) {
-			} else {
-				priceArray.push(parseInt(price));
-			}
+			activitiesArray[num].checked = true;
 		}
 		else {
-			priceArray.push(parseInt(price * -1));
+			activitiesArray[num].checked = false;
 		}
 
-		function getSum(total, num) {
-		    return total + num;
-		}
-
-		var totalPrice = priceArray.reduce(getSum);
+		let totalPrice = activitiesArray
+							.filter(activity => activity.checked === true)
+							.reduce((sum, activityPrice) => sum += activityPrice.price , 0);
 		displayPrice.textContent = "Your Total: $" + totalPrice;
 	});
 
