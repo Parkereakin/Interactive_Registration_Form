@@ -124,7 +124,7 @@
 			for (let i = 0; i < activitiesArray.length; i++) {
 				if (activitiesArray[i].day === thisDay && activitiesArray[i].time === thisTime && activitiesArray[i].index !== num) {
 					allActivities[i].parentNode.style.opacity = "0.2";					
-					allActivities[i].parentNode.style.display = "none";					
+					allActivities[i].disabled = true;					
 					allActivities[i].parentNode.style.textDecoration = "line-through";					
 				}
 			}
@@ -132,8 +132,8 @@
 		else {
 			for (let i = 0; i < activitiesArray.length; i++) {
 				if (activitiesArray[i].day === thisDay && activitiesArray[i].time === thisTime && activitiesArray[i].index !== num) {
-					allActivities[i].parentNode.style.opacity = "1";					
-					allActivities[i].parentNode.style.display = "block";					
+					allActivities[i].parentNode.style.opacity = "1";						
+					allActivities[i].disabled = false;								
 					allActivities[i].parentNode.style.textDecoration = "none";					
 				}
 			}
