@@ -180,6 +180,10 @@
 			creditCard.hide();
 			payPal.hide();
 			bitcoin.show();
+		} else if (paymentOption === "select_method") {
+			creditCard.hide();
+			payPal.hide();
+			bitcoin.hide();
 		}
 	});
 
